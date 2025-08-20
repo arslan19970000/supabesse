@@ -11,24 +11,15 @@ export default function OrdersPage() {
     const fetchOrders = async () => {
       const { data: user } = await supabase.auth.getUser()
       const uid = user.user?.id ?? null
-<<<<<<< HEAD
-      if (uid) {
-        const { data } = await supabase
-=======
 
       if (uid) {
         const { data, error } = await supabase
->>>>>>> 48385a9 (Fix showConfirmation call to prevent build error)
           .from('orders')
           .select(`
             id,
             total_amount,
             created_at,
-<<<<<<< HEAD
-            order_items(
-=======
             order_items (
->>>>>>> 48385a9 (Fix showConfirmation call to prevent build error)
               quantity,
               price,
               products(name)
@@ -37,9 +28,6 @@ export default function OrdersPage() {
           .eq('user_id', uid)
           .order('created_at', { ascending: false })
 
-<<<<<<< HEAD
-        setOrders(data || [])
-=======
         if (error) {
           console.error('Order fetch error:', error.message)
         }
@@ -53,7 +41,6 @@ export default function OrdersPage() {
         )
 
         setOrders(uniqueOrders)
->>>>>>> 48385a9 (Fix showConfirmation call to prevent build error)
       }
       setLoading(false)
     }
@@ -63,25 +50,11 @@ export default function OrdersPage() {
   const cancelOrder = async (orderId: string) => {
     if (!confirm('Are you sure you want to cancel this order?')) return
 
-<<<<<<< HEAD
-    // Pehle order_items delete karo (agar foreign key constraint hai)
-    await supabase
-      .from('order_items')
-      .delete()
-      .eq('order_id', orderId)
-
-    // Phir order delete karo
-    const { error } = await supabase
-      .from('orders')
-      .delete()
-      .eq('id', orderId)
-=======
     // Delete child items first
     await supabase.from('order_items').delete().eq('order_id', orderId)
 
     // Then delete parent order
     const { error } = await supabase.from('orders').delete().eq('id', orderId)
->>>>>>> 48385a9 (Fix showConfirmation call to prevent build error)
 
     if (!error) {
       setOrders(prev => prev.filter(o => o.id !== orderId))
