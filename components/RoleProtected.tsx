@@ -12,7 +12,7 @@ interface RoleProtectedProps {
   fallbackComponent?: React.ReactNode
 }
 
-export default function RoleProtected({ 
+export default function RoleProtected({
   children, 
   allowedRole, 
   redirectPath,
